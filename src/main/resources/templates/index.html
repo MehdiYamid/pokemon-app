@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="https://thymeleaf.org">
+    <head>
+        <title>Pokémon App</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link th:href = "@{/css/bootstrap.min.css}" rel="stylesheet">
+    </head>
+    <body>
+        <div class="container">
+            <div class="text-center" style="margin:25px;">
+                <img th:src="@{/img/pokeball_128.png}" class="rounded" alt="">
+            </div>
+            <div class="alert alert-primary" role="alert">
+                Select a Pokémon!
+            </div>
+            <form th:action="@{/battle}" method="post">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="card">
+                            <div class="card-header">Player 1</div>
+                            <div class="card-body">
+                                <select name="pokemonSelected1" class="form-control">
+                                    <option th:each="pokemon : ${pokemonList}" th:value="${pokemon.name}" th:text="${pokemon.name}">Pokemon</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="card">
+                            <div class="card-header">Player 2</div>
+                            <div class="card-body">
+                                <select name="pokemonSelected2" class="form-control">
+                                    <option th:each="pokemon : ${pokemonList}" th:value="${pokemon.name}" th:text="${pokemon.name}">Pokemon</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br/>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <button type="submit" class="btn btn-primary btn-lg btn-block">Fight !</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </body>
+</html>

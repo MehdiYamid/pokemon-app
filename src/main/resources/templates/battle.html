@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="https://thymeleaf.org">
+    <head>
+        <title>Pokémon App</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link th:href = "@{/css/bootstrap.min.css}" rel="stylesheet">
+    </head>
+    <body>
+        <div class="container">
+            <div class="text-center" style="margin:25px;">
+                <img th:src="@{/img/pokeball_128.png}" class="rounded" alt="">
+            </div>
+            <div class="alert alert-success" role="alert" th:if="${battle.player1.winner || battle.player2.winner}">
+                <span th:if="${battle.player1.winner}">Player 1 win !</span>
+                <span th:if="${battle.player2.winner}">Player 2 win !</span>
+            </div>
+            <div class="alert alert-info" role="alert" th:if="${battle.round <= 3}">
+                Round <span th:text="${battle.round}"></span>
+            </div>
+            <form th:action="@{/attack}" method="post">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div th:classappend="${battle.player1.winner} ? 'card text-white bg-success mb-3' : 'card'">
+                            <div class="card-header">Player 1 : <span th:text="${battle.player1.roundWon}"></span></div>
+                            <div class="card-body">
+                                <h5 class="card-title"><span th:text="${battle.player1.pokemon.name}"></span></h5>
+                                <p>
+                                    Height: <span th:text="${battle.player1.pokemon.height}"></span><br/>
+                                    Weight: <span th:text="${battle.player1.pokemon.weight}"></span><br/>
+                                </p>
+                                <div class="alert alert-danger" role="alert">
+                                    HP : <span th:text="${battle.player1.pokemon.hp}"></span>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <select name="attackType1" th:disabled="${battle.player1.attackAllow} ? null : 'disabled'" class="form-control">
+                                    <option value="1">Normal attack</option>
+                                    <option value="2">Special attack</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div th:classappend="${battle.player2.winner} ? 'card text-white bg-success mb-3' : 'card'">
+                            <div class="card-header">Player 2 : <span th:text="${battle.player2.roundWon}"></span></div>
+                            <div class="card-body">
+                                <h5 class="card-title"><span th:text="${battle.player2.pokemon.name}"></span></h5>
+                                <p>
+                                    Height: <span th:text="${battle.player2.pokemon.height}"></span><br/>
+                                    Weight: <span th:text="${battle.player2.pokemon.weight}"></span><br/>
+                                </p>
+                                <div class="alert alert-danger" role="alert">
+                                    HP : <span th:text="${battle.player2.pokemon.hp}"></span>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <select name="attackType2" th:disabled="${battle.player2.attackAllow} ? null : 'disabled'" class="form-control">
+                                    <option value="1">Normal attack</option>
+                                    <option value="2">Special attack</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br/>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <button type="submit" th:if="${battle.round <= 3}" class="btn btn-warning btn-lg btn-block">Go !</button>
+                        <a class="btn btn-primary btn-lg btn-block" th:href="@{/}" th:if="${battle.player1.winner || battle.player2.winner}">Reset</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </body>
+</html>
