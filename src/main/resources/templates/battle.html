@@ -12,8 +12,8 @@
                 <img th:src="@{/img/pokeball_128.png}" class="rounded" alt="">
             </div>
             <div class="alert alert-success" role="alert" th:if="${battle.player1.winner || battle.player2.winner}">
-                <span th:if="${battle.player1.winner}">Player 1 win !</span>
-                <span th:if="${battle.player2.winner}">Player 2 win !</span>
+                <span th:if="${battle.player1.winner}">Player 1 wins !</span>
+                <span th:if="${battle.player2.winner}">Player 2 wins !</span>
             </div>
             <div class="alert alert-info" role="alert" th:if="${!battle.player1.winner && !battle.player2.winner}">
                 Round <span class="badge bg-warning text-wrap" th:text="${battle.round}"></span>
