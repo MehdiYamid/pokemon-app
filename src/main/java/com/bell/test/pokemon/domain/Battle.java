@@ -1,5 +1,4 @@
 package com.bell.test.pokemon.domain;
-
 public class Battle {
 
     private Player player1;

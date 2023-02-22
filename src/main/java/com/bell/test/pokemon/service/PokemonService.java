@@ -10,6 +10,9 @@ import org.springframework.web.client.RestTemplate;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * Service for Pokemons
+ */
 @Service
 public class PokemonService {
 
@@ -22,6 +25,11 @@ public class PokemonService {
     @Autowired
     private RestTemplate restTemplate;
 
+    /**
+     *  Get Pokemons list
+     *
+     * @return The list of Pokemons
+     */
     public List<Pokemon> getPokemonList() {
         ResponseEntity<PokemonListResponse> response = restTemplate.getForEntity(POKEAPI_URL + "?limit=50", PokemonListResponse.class);
         if (response.getStatusCode() == HttpStatus.OK) {
@@ -30,10 +38,26 @@ public class PokemonService {
         return null;
     }
 
+    /**
+     * Init a battle with the pokemons selected by players
+     *
+     * @param pokemonSelected1 The player's 1 Pokemon
+     * @param pokemonSelected2 The player's 2 Pokemon
+     *
+     * @return The battle
+     */
     public Battle initBattle(String pokemonSelected1, String pokemonSelected2) {
         return new Battle(setupPlayer(pokemonSelected1), setupPlayer(pokemonSelected2));
     }
 
+    /**
+     * Evaluate the battle between Pokemons
+     *
+     * @param battle The battle entity
+     * @param attackType1 The attack type for player 1 (normal or special)
+     * @param attackType2 The attack type for player 2 (normal or special)
+     * @return The battle
+     */
     public Battle evaluateBattle(Battle battle, String attackType1, String attackType2) {
         battle.getPlayer1().getPokemon().decreaseHp(calculateDamage(attackType2));
         battle.getPlayer2().getPokemon().decreaseHp(calculateDamage(attackType1));
@@ -63,6 +87,12 @@ public class PokemonService {
         return battle;
     }
 
+    /**
+     * Get Pokemon by name
+     *
+     * @param pokemonName The Pokemon name
+     * @return The Pokemon
+     */
     private Pokemon getPokemonByName(String pokemonName) {
         ResponseEntity<Pokemon> response = restTemplate.getForEntity(POKEAPI_URL + "/" + pokemonName, Pokemon.class);
         if (response.getStatusCode() == HttpStatus.OK) {
@@ -71,10 +101,22 @@ public class PokemonService {
         return null;
     }
 
+    /**
+     * Init a player with the Pokemon selected
+     *
+     * @param pokemonSelected The Pokemon selected
+     * @return The player
+     */
     private Player setupPlayer(String pokemonSelected) {
         return new Player(getPokemonByName(pokemonSelected));
     }
 
+    /**
+     * Calculate the damage by attack type
+     *
+     * @param attackType The attack type (normal or special)
+     * @return The damage
+     */
     private int calculateDamage(String attackType) {
         int damage = 0;
         if (attackType != null) {
