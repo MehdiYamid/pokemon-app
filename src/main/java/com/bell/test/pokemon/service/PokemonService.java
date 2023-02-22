@@ -1,9 +1,6 @@
 package com.bell.test.pokemon.service;
 
-import com.bell.test.pokemon.domain.Battle;
-import com.bell.test.pokemon.domain.Player;
-import com.bell.test.pokemon.domain.Pokemon;
-import com.bell.test.pokemon.domain.PokemonListResponse;
+import com.bell.test.pokemon.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +14,8 @@ import java.util.Random;
 public class PokemonService {
 
     private static final String POKEAPI_URL = "https://pokeapi.co/api/v2/pokemon";
+    private static final int HP_INIT = 20;
+    private static final int ROUND_MAX = 2;
 
     private final Random random = new Random();
 
@@ -39,27 +38,27 @@ public class PokemonService {
         battle.getPlayer1().getPokemon().decreaseHp(calculateDamage(attackType2));
         battle.getPlayer2().getPokemon().decreaseHp(calculateDamage(attackType1));
 
-        battle.getPlayer1().setAttackAllow(attackType1 == null || !attackType1.equals("2"));
-        battle.getPlayer2().setAttackAllow(attackType2 == null || !attackType2.equals("2"));
+        battle.getPlayer1().setAttackAllow(attackType1 == null || !(Integer.parseInt(attackType1)==AttackTypeEnum.SPECIAL_ATTACK.getValue()));
+        battle.getPlayer2().setAttackAllow(attackType2 == null || !(Integer.parseInt(attackType2)==AttackTypeEnum.SPECIAL_ATTACK.getValue()));
 
         int player1Hp = battle.getPlayer1().getPokemon().getHp();
         int player2Hp = battle.getPlayer2().getPokemon().getHp();
 
         if (player1Hp <= 0) {
             battle.getPlayer2().incrementRoundWon();
-            if (battle.getPlayer2().getRoundWon()==2) {
+            if (battle.getPlayer2().getRoundWon()==ROUND_MAX) {
                 battle.getPlayer2().setWinner(true);
             }
         } else if (player2Hp <= 0) {
             battle.getPlayer1().incrementRoundWon();
-            if (battle.getPlayer1().getRoundWon()==2) {
+            if (battle.getPlayer1().getRoundWon()==ROUND_MAX) {
                 battle.getPlayer1().setWinner(true);
             }
         }
         if (player1Hp <= 0 || player2Hp <= 0) {
             battle.incrementRound();
-            battle.getPlayer1().getPokemon().setHp(20);
-            battle.getPlayer2().getPokemon().setHp(20);
+            battle.getPlayer1().getPokemon().setHp(HP_INIT);
+            battle.getPlayer2().getPokemon().setHp(HP_INIT);
         }
         return battle;
     }

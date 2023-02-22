@@ -1,5 +1,7 @@
 package com.bell.test.pokemon.web;
 
+import com.bell.test.pokemon.domain.Battle;
+import com.bell.test.pokemon.domain.Player;
 import com.bell.test.pokemon.domain.Pokemon;
 import com.bell.test.pokemon.service.PokemonService;
 import org.junit.jupiter.api.Test;
@@ -40,5 +42,27 @@ public class GameControllerTest {
 
         assertEquals("index", viewName);
         verify(model).addAttribute("pokemonList", expectedPokemonList);
+    }
+
+    @Test
+    public void battleTest() {
+        Battle battle = new Battle(new Player(new Pokemon("Mewtwo", 100, 114)), new Player(new Pokemon("Miaouss", 20, 13)));
+        when(pokemonService.initBattle("Mewtwo", "Miaouss")).thenReturn(battle);
+
+        String viewName = gameController.battle("Mewtwo", "Miaouss", model);
+
+        assertEquals("battle", viewName);
+        verify(model).addAttribute("battle", battle);
+    }
+
+    @Test
+    public void attackTest() {
+        Battle battle = new Battle(new Player(new Pokemon("Mewtwo", 100, 114)), new Player(new Pokemon("Miaouss", 20, 13)));
+        when(pokemonService.evaluateBattle(battle, "Mewtwo", "Miaouss")).thenReturn(battle);
+
+        String viewName = gameController.attack(battle, "Mewtwo", "Miaouss", model);
+
+        assertEquals("battle", viewName);
+        verify(model).addAttribute("battle", battle);
     }
 }
